@@ -57,7 +57,7 @@ The homestead wave is 1910–1929, a full generation after Roosevelt's ranching 
    - The Marquise de Morès was Medora von Hoffman, daughter of Louis von Hoffman.
    - Next steps: verify that this is the same Louis von Hoffman, pull the patent image, and identify Allen.
 
-3. **From homestead to federal land: 123 parcels went back to the United States in the 1930s.** For 123 parcels, the land patented to a homesteader (mostly 1912–1925) was later patented to the USA (mostly 1936–1940).
+3. **From homestead to federal land: land first patented to homesteaders was later patented to the United States.** Matching the land description text exactly gives 122 pairs (123 in the first pass). Matching on the map instead, now that every patent's full land list is read, gives 190 homestead patents (mostly 1912–1925) where at least a quarter of the land was later patented to the USA (mostly 1936–1940), across 167 of the 299 mapped USA patents.
    - Examples: Stanley Paddock (1915 → USA 1937), Susie Crandall (1917 → USA 1938), Thora Jensen/Swanson (1923 → USA 1937).
    - Working hypothesis: Depression-era federal buyouts of failed homesteads, which may later have become part of the Little Missouri National Grassland. **Verify the program and the grassland link with USFS or NPS historians before saying this publicly.**
    - This arc runs from homestead to dust to public land. It may be the strongest single story for a conservation-themed page.

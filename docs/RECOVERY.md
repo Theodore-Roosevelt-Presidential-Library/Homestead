@@ -66,3 +66,13 @@ Two notes on what changed:
 Still lost: the README rewrite, `docs/blm-request-draft.md`, `docs/t140n-r102w-notes.md`, and the earlier sections of `docs/data-access.md`.
 
 `docs/_scratch_T140N_R103W_head.csv` is a temporary merge file. It can be deleted once deletion is allowed in this folder.
+
+## Full land descriptions read (2026-10-10)
+
+The GLO search cards show only the first two land descriptions. For every individual, USA and unnamed patent with more than two, the full list was read by expanding "Show More" on the results pages and saved to `data/raw/land_full.csv` (299 patents; columns: accession, township and range of the search it was read in, full description).
+
+- `src/geocode_parcels.py` now uses the full list when one exists. Result: **773 patents mapped, all with their full land.** Nothing is drawn as partial any more.
+- Record lines with no section number (for example `E2SE EXCL RR ROW`) are left off rather than guessed. Seven USA patents consist only of such lines and are not drawn.
+- Three unnamed 1903–1905 records (`SER-NDMTAA 000001 AA/AD/AK`) list 24–82 whole sections across many townships. They were not expanded and are not drawn.
+- One reading to double-check against the image: Ed Marko, SER-522051, S34 shows `N½S½,NWSE` on the portal (recorded as written).
+- Map-overlap matching finds 190 homestead patents later patented (in part) to the United States, vs 122 by exact text. The site's "Patented twice" cards still use the exact-text matches.

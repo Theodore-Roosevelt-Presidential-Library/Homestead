@@ -42,7 +42,7 @@ Other views and options:
 
 ### Rebuild the data
 
-When `data/processed/` is regenerated (for example, once more partial patents are mapped), run:
+When `data/processed/` is regenerated (for example, after `src/geocode_parcels.py` is rerun), run:
 
 ```bash
 python3 src/build_site_data.py

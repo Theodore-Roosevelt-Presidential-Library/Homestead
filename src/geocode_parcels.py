@@ -2,9 +2,10 @@
 
 Inputs:
   data/processed/patents_all.csv      one row per (township search, patent)
-  data/raw/land_full.csv              optional: full land descriptions for patents whose
-                                      search card showed only the first two
-                                      (accession, township, range, land_desc_full)
+  data/raw/land_full.csv              full land descriptions for patents whose search card
+                                      showed only the first two, read by expanding "Show More"
+                                      on the GLO results (accession, township, range of the
+                                      search it was read in, land_desc_full)
   data/grid/ND05*.geojson             BLM CadNSDI "PLSS Intersected" polygons per township
                                       (gis.blm.gov .../BLM_Natl_PLSS_CadNSDI/MapServer/3)
 Outputs:
@@ -134,7 +135,7 @@ def main():
     fp = os.path.join(RAW, "land_full.csv")
     if os.path.exists(fp):
         for r in csv.DictReader(open(fp)):
-            full[(r["accession"], r["township"], r["range"])] = r["land_desc_full"]
+            full[r["accession"]] = ((r["township"], r["range"]), r["land_desc_full"])
 
     by_acc = defaultdict(list)
     for r in rows: by_acc[r["accession"]].append(r)
@@ -145,13 +146,17 @@ def main():
         r0 = rs[0]
         if r0["patentee_type"] in ("railroad", "railroad_affiliate", "state", "company"):
             report["skipped_grant"] += 1; continue          # big grants: shown text is a sample only
+        if " 000001 " in acc:                               # multi-township lists (24-82 descriptions,
+            report["skipped_list"] += 1; continue           # 1903-05, no patentee name): not expanded
         geoms, notes, texts, complete = [], set(), [], True
-        for r in rs:
-            home = (r["search_township"], r["search_range"])
-            text = full.get((acc, *home))
-            if text is None:
-                text = r["land_desc_shown"]
+        if acc in full:                                   # full description read from the record
+            sources = [full[acc]]
+        else:
+            sources = []
+            for r in rs:
+                sources.append(((r["search_township"], r["search_range"]), r["land_desc_shown"]))
                 if r["shown_complete"] != "Y": complete = False
+        for home, text in sources:
             texts.append(text)
             for seg in text.split(";"):
                 seg = seg.strip()

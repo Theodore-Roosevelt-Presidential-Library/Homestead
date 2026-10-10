@@ -160,6 +160,10 @@
 
     Promise.all([loadLeaflet(), getJSON("parcels.json"), getJSON("townships.json")]).then(function (r) {
       var L = r[0], parcels = r[1], twp = r[2];
+      if (!parcels.features.some(function (f) { return f.properties.p; })) {
+        var partLi = legend.querySelector(".hs-sw-part");
+        if (partLi) partLi.parentNode.remove();
+      }
       var map = L.map(mapEl, {
         scrollWheelZoom: false, zoomSnap: 0.25, minZoom: 8, maxZoom: 17,
         zoomAnimation: !REDUCED, fadeAnimation: !REDUCED, markerZoomAnimation: !REDUCED
