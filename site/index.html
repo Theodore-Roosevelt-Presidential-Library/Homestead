@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Owned the Badlands? Homesteads around Medora, 1889–1957</title>
+<meta name="description" content="A map, chart and name search of the federal land patents in 12 townships around Medora and the Elkhorn Ranch area in North Dakota, from the Theodore Roosevelt Presidential Library.">
+<meta property="og:title" content="Who Owned the Badlands? Homesteads around Medora, 1889–1957">
+<meta property="og:description" content="Watch the homesteads fill in around Medora, North Dakota, and search the names on every federal land patent.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://homestead.labs.trlibrary.com/">
+<link rel="canonical" href="https://homestead.labs.trlibrary.com/">
+<link rel="stylesheet" href="homestead.css">
+<style>
+  :root { color-scheme: light; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: #FBFAF7; color: #25282A;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.55;
+  }
+  a { color: #1B4532; }
+  :focus-visible { outline: 3px solid #092A4D; outline-offset: 2px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
+  .skip { position: absolute; left: -9999px; }
+  .skip:focus { left: 16px; top: 8px; background: #fff; padding: 8px 12px; z-index: 1000; }
+  header.top { background: #1B4532; color: #fff; }
+  header.top .wrap { padding-top: 40px; padding-bottom: 40px; }
+  .eyebrow { margin: 0 0 10px; font-size: .8125rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #8FC895; }
+  .eyebrow a { color: inherit; text-decoration: none; }
+  h1 { margin: 0 0 14px; font-size: clamp(1.9rem, 4.6vw, 3rem); line-height: 1.08; letter-spacing: -.02em; max-width: 22ch; }
+  h1 span { display: block; font-size: .55em; font-weight: 600; letter-spacing: -.01em; color: #D1CCBD; margin-top: 8px; }
+  .lede { margin: 0; max-width: 44rem; font-size: 1.125rem; color: #F3F1EA; }
+  .jump { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 22px 0 0; padding: 0; list-style: none; font-size: .9375rem; }
+  .jump a { color: #fff; }
+  main { padding: 40px 0 24px; }
+  .page-section { margin-top: 64px; }
+  .page-section h2 { font-size: 1.5rem; line-height: 1.2; color: #1B4532; margin: 0 0 12px; }
+  .page-section h3 { font-size: 1.0625rem; margin: 22px 0 6px; color: #092A4D; }
+  .page-section p, .page-section li { max-width: 46rem; }
+  .page-section ul { padding-left: 1.2em; }
+  .page-section li + li { margin-top: 6px; }
+  .downloads { list-style: none; padding: 0 !important; display: grid; gap: 10px; }
+  .downloads li { background: #fff; border: 1px solid #E2DED3; border-radius: 8px; padding: 12px 14px; }
+  .downloads a { font-weight: 700; }
+  .downloads small { display: block; color: #5A5F63; }
+  code { background: #F3F1EA; padding: 1px 5px; border-radius: 4px; font-size: .9em; }
+  footer { border-top: 1px solid #E2DED3; margin-top: 64px; padding: 24px 0 40px; font-size: .875rem; color: #5A5F63; }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to the map</a>
+<header class="top">
+  <div class="wrap">
+    <p class="eyebrow"><a href="https://www.trlibrary.com/">Theodore Roosevelt Presidential Library</a> · Labs</p>
+    <h1>Who Owned the Badlands? <span>Homesteads around Medora, 1889–1957</span></h1>
+    <p class="lede">When the federal government handed public land to a new owner, it left a paper trail. Follow it through <span data-hs-stat="mapped">773</span> federal land patents in 12 townships around Medora and the Elkhorn Ranch area, from the first homestead claims to the land patented to the United States in the 1930s.</p>
+    <ul class="jump">
+      <li><a href="#hs-map">Map</a></li>
+      <li><a href="#chart">By year</a></li>
+      <li><a href="#search">Search names</a></li>
+      <li><a href="#stories">Patented twice</a></li>
+      <li><a href="#about">About the data</a></li>
+      <li><a href="#downloads">Downloads</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="main">
+  <div class="wrap">
+    <div id="hs-map" data-homestead="map"></div>
+    <div id="chart" class="page-section" data-homestead="chart"></div>
+    <div id="search" class="page-section" data-homestead="search"></div>
+    <div id="stories" class="page-section" data-homestead="stories"></div>
+
+    <section id="about" class="page-section" aria-labelledby="about-h">
+      <h2 id="about-h">About the data</h2>
+      <p>A land patent is the document in which the federal government handed title to a piece of public land to a new owner. The patent date is when that title was issued, which was often years after someone first filed a claim and moved onto the land.</p>
+
+      <h3>What's covered</h3>
+      <ul>
+        <li>12 townships: T139N–T141N and T143N, each in ranges R101W–R103W. The three T143N townships cover the Elkhorn Ranch area north of Medora; the label on the map marks that block of townships, not a specific site.</li>
+        <li>Federal land patents only, transcribed from BLM General Land Office (GLO) Records search results in October 2026: <span data-hs-stat="patents">805</span> patents in all, <span data-hs-stat="mapped">773</span> of them drawn on the map.</li>
+        <li>The <span data-hs-stat="grants">22</span> big railroad and state grants are listed in the downloads but not drawn. They cover land across many townships and would blanket the map.</li>
+        <li>Land bought from a railroad, the state or another private owner never shows up in federal patent records, so plenty of families who lived here won't appear.</li>
+      </ul>
+
+      <h3>How the parcels were drawn</h3>
+      <ul>
+        <li>Each patent's land description was matched to the BLM's survey grid of 40-acre squares (quarter-quarter sections) and numbered government lots. When a description names a piece smaller than 40 acres, it is drawn on the whole square that contains it.</li>
+        <li><strong>Some patents are only partly mapped.</strong> For <span data-hs-stat="partial">299</span> patents, only part of the land is on the map so far. These have a dashed outline, and more of their land will be filled in as the transcription continues.</li>
+        <li>Sections 16 and 36 in each township were reserved school land, which is one reason some squares stay empty. Others were never patented, or passed through grants that aren't drawn.</li>
+        <li>The year slider runs from 1880 to 1960. One later patent, dated <span data-hs-stat="last_year">1975</span>, appears when the slider reaches its end.</li>
+      </ul>
+
+      <h3>Reading a land description</h3>
+      <p>The land column uses the survey shorthand from the records. <code>S26 SWNW</code> means the southwest quarter of the northwest quarter of Section 26, a 40-acre square. <code>S34 NW</code> is the whole northwest quarter of Section 34, 160 acres. <code>LOT 4</code> is a numbered lot, usually along a township edge or a river.</p>
+
+      <h3>Check the record</h3>
+      <p>Every patent links to BLM GLO Records, where you can see the original document. The link opens BLM's search with the patent's accession number, and the record is the first result.</p>
+
+      <h3>Credits</h3>
+      <p>Land patents: Bureau of Land Management, General Land Office Records. Survey grid: BLM Cadastral National Spatial Data Infrastructure (PLSS). Basemap: USGS The National Map. Built by the Theodore Roosevelt Presidential Library.</p>
+    </section>
+
+    <section id="downloads" class="page-section" aria-labelledby="dl-h">
+      <h2 id="dl-h">Downloads</h2>
+      <p>Free to use. Please credit BLM GLO Records and the Theodore Roosevelt Presidential Library.</p>
+      <ul class="downloads">
+        <li><a href="data/parcels.geojson" download>parcels.geojson</a><small>Every mapped patent as a polygon (WGS84), with name, date, land description, township and accession number.</small></li>
+        <li><a href="data/patents_unique.csv" download>patents_unique.csv</a><small>One row per patent, including the railroad and state grants that aren't drawn on the map.</small></li>
+        <li><a href="data/reacquisitions.csv" download>reacquisitions.csv</a><small>Land patented to a homesteader and later patented to the United States. The source for the “Patented twice” cards.</small></li>
+      </ul>
+    </section>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Theodore Roosevelt Presidential Library · Medora, North Dakota · <a href="https://www.trlibrary.com/">trlibrary.com</a></p>
+  </div>
+</footer>
+<script src="embed.js" async></script>
+</body>
+</html>

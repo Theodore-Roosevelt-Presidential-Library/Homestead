@@ -16,10 +16,10 @@
   "rows_all": 837,
   "unique_patents": 805,
   "by_type_unique": {
-    "individual": 460,
+    "individual": 439,
     "state": 9,
     "railroad": 9,
-    "unnamed": 17,
+    "unnamed": 38,
     "usa": 306,
     "railroad_affiliate": 3,
     "company": 1
@@ -38,12 +38,12 @@
   },
   "individual_by_decade": {
     "1880s": 2,
-    "1900s": 15,
+    "1900s": 13,
     "1910s": 252,
     "1920s": 157,
-    "1930s": 24,
-    "1940s": 3,
-    "1950s": 7
+    "1930s": 9,
+    "1940s": 2,
+    "1950s": 4
   },
   "usa_by_year": {
     "1935": 1,

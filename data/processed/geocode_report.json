@@ -1,0 +1,89 @@
+{
+ "counts": {
+  "placed": 773,
+  "placed_partial": 299,
+  "placed_complete": 474,
+  "unplaced": 10,
+  "skipped_grant": 22
+ },
+ "unplaced": [
+  {
+   "accession": "SER-NDMTAA 000001 AD",
+   "names": "",
+   "land": [
+    "T137N R101W S16; T137N R101W S36",
+    "T137N R101W S16; T137N R101W S36",
+    "T137N R101W S16; T137N R101W S36",
+    "T137N R101W S16; T137N R101W S36 (statewide school grant)",
+    "T137N R101W S16; T137N R101W S36 (statewide school grant)",
+    "T137N R101W S16; T137N R101W S36 (statewide school grant)",
+    "T137N R101W S16; T137N R101W S36 (statewide school grant)"
+   ]
+  },
+  {
+   "accession": "SER-NDMTAA 000001 AK",
+   "names": "",
+   "land": [
+    "T135N R104W S16; T135N R104W S36",
+    "T135N R104W S16; T135N R104W S36"
+   ]
+  },
+  {
+   "accession": "SER-NDMTAA 077694",
+   "names": "USA",
+   "land": [
+    "(no section listed) E2SE EXCL RR ROW"
+   ]
+  },
+  {
+   "accession": "SER-NDMTAA 078943",
+   "names": "USA",
+   "land": [
+    "(no section listed) S2 EXCL 36.01 AC ROW"
+   ]
+  },
+  {
+   "accession": "SER-NDMTAA 078944",
+   "names": "USA",
+   "land": [
+    "(no section listed) S2 EXCL 1.27 AC FOR NRN PAC RY CO"
+   ]
+  },
+  {
+   "accession": "SER-NDMTAA 078941",
+   "names": "USA",
+   "land": [
+    "(no section listed) E2 EXCL 59.42 AC ROW"
+   ]
+  },
+  {
+   "accession": "SER-NDMTAA 078942",
+   "names": "USA",
+   "land": [
+    "(no section listed) NW W2NE SENE EXCL 44.34 AC FOR NRN PAC RY CO"
+   ]
+  },
+  {
+   "accession": "SER-NDMTAA 078860",
+   "names": "USA",
+   "land": [
+    "(no section listed) EXCL 1.00 AC IN NWNW FOR SCHOOL SITE"
+   ]
+  },
+  {
+   "accession": "SER-NDMTAA 000001 AA",
+   "names": "(no name listed)",
+   "land": [
+    "T141N R100W S16; T141N R100W S36 (statewide school grant)",
+    "T141N R100W S16; T141N R100W S36 (statewide school grant)"
+   ]
+  },
+  {
+   "accession": "SER-NDMTAA 078901",
+   "names": "USA",
+   "land": [
+    "(no section listed) EXCL 9.73 AC"
+   ]
+  }
+ ]
+}

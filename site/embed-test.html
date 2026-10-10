@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Homestead embed test</title>
+<style>
+  /* Deliberately hostile host styles, like a Drupal theme, to check that nothing leaks in or out */
+  body { margin: 0; font-family: Georgia, serif; background: #f7f7f7; color: #333; }
+  h2 { font-size: 40px; color: red; text-transform: uppercase; }
+  img { max-width: 100%; border: 3px solid hotpink; }
+  button { background: yellow; border-radius: 0; }
+  ul { list-style: square; }
+  a { color: purple; }
+  .page { max-width: 960px; margin: 0 auto; padding: 0 16px; background: #fff; }
+  .host-note { padding: 12px; background: #eef; font-family: monospace; }
+</style>
+</head>
+<body>
+<div class="page">
+  <h2>Host page heading (should stay red)</h2>
+  <p class="host-note">map, data-year="1915", data-height="480"</p>
+  <div data-homestead="map" data-year="1915" data-height="480"></div>
+  <p class="host-note">chart</p>
+  <div data-homestead="chart"></div>
+  <p class="host-note">search, data-name="olsen"</p>
+  <div data-homestead="search" data-name="olsen"></div>
+  <p class="host-note">stories</p>
+  <div data-homestead="stories"></div>
+  <p class="host-note">Host button after the embeds: <button>still yellow</button></p>
+</div>
+<script src="embed.js" async></script>
+</body>
+</html>

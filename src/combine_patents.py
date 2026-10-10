@@ -18,7 +18,7 @@ OUT = os.path.join(ROOT, "data", "processed")
 
 def classify(name):
     n = name.upper()
-    if n.startswith("(NO NAME"): return "unnamed"
+    if not n.strip() or n.startswith("(NO NAME"): return "unnamed"
     if n == "USA": return "usa"
     if "PACIFIC" in n: return "railroad"
     if "IMPROVEMENT CO" in n: return "railroad_affiliate"
