@@ -6,13 +6,13 @@ The `site/` folder is a static site for **homestead.labs.trlibrary.com**: "Who O
 
 | View | What it shows |
 |---|---|
-| `map` | Leaflet map on USGS topo tiles. A 1880–1960 year slider with Play adds each parcel once its patent date is reached. Orange = patents to individuals, navy = patents to the United States, sand = no name in the index, dashed outline = only part of the land mapped so far. Popups link to BLM GLO Records. |
+| `map` | Leaflet map on USGS topo tiles. A 1883–1960 year slider with Play adds each parcel once its patent date is reached. It starts in 1883, the year Theodore Roosevelt first came to the badlands, with a short note until the first patents in 1889. Orange = patents to individuals, navy = patents to the United States, sand = no name in the index, dashed outline = only part of the land mapped so far. Tapping a spot, or the **What land am I on?** button (phone location, never sent anywhere), opens a card with every patent for that spot, today's land status and the Native history of the area; patents link to BLM GLO Records. |
 | `chart` | Patents per year as stacked bars (inline SVG) with hover/tap/keyboard tooltips, the 1883 annotation, the 1936–1940 band and a data table. |
 | `search` | "Did your family homestead near Medora?" Matches any part of a patentee name, ignoring case and punctuation. |
 | `stories` | "Patented twice" cards from `reacquisitions.csv`, longest gap first, 6 at a time. |
 | `all` | All four, in order. |
 
-The full page (`site/index.html`) shows all four plus an About/method section and downloads. `?acc=<accession>` on the full page zooms to that parcel and opens its popup, e.g. `https://homestead.labs.trlibrary.com/?acc=SER-NDMTAA%20077716`.
+The full page (`site/index.html`) shows all four plus an About/method section and downloads. `?acc=<accession>` on the full page zooms to that parcel and opens its card, e.g. `https://homestead.labs.trlibrary.com/?acc=SER-NDMTAA%20077716`.
 
 ### Embed code
 
@@ -26,7 +26,7 @@ Drop a div where each view should appear, and include the script once per page:
 Other views and options:
 
 ```html
-<div data-homestead="map" data-year="1915" data-height="600"></div>  <!-- start year, map height in px -->
+<div data-homestead="map" data-year="1915" data-height="600"></div>  <!-- start year (default 1883), map height in px -->
 <div data-homestead="chart"></div>
 <div data-homestead="search" data-name="olsen"></div>               <!-- preset search -->
 <div data-homestead="stories"></div>
@@ -72,3 +72,12 @@ Serve the `site/` folder as the site root. It already contains `CNAME` (`homeste
 DNS: point a CNAME record for `homestead.labs` at `<org>.github.io`.
 
 Keep `data/processed/tr_name_matches.csv` out of `site/`. It is a working file and is not published.
+
+## What land am I on?
+
+The map card answers "what land is this?" for any tapped spot or the phone's location. The lookup runs entirely in the browser against the site's own data; the location is never sent or stored.
+
+- `site/data/grid.json` (loaded only when the card opens): the PLSS 40-acre squares and lots per township, so the card can name the section and square.
+- `site/data/landnow.json`: land status today (NPS, USFS, State, BLM) from the BLM Surface Management Agency map service, clipped to the townships by `src/fetch_land_status.py` (writes `data/raw/land_status_sma.geojson`; then rerun `src/build_site_data.py`). Private land is shown only as private; no owners are named.
+- `site/data/context.json`: hand-written card text (agency names, school and railroad sections, the "Before the homesteads" Native history and its sources, the privacy line). Every statement is tied to a listed source; keep them in step.
+- Parcels whose GLO land description reserves coal or minerals carry `m: 1` in `parcels.json`.

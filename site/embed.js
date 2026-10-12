@@ -29,6 +29,9 @@
   var LEAFLET = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/";
   var TILES = "https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{z}/{y}/{x}";
   var Y0 = 1880, Y1 = 1960;
+  // The map slider starts the year Theodore Roosevelt first came to the badlands (NPS: he
+  // "originally came to Dakota Territory in 1883 to hunt bison"). The chart keeps Y0.
+  var S0 = 1883;
   var MEDORA = [46.9139, -103.5246];
   var C = { forest: "#1B4532", night: "#092A4D", sand: "#D1CCBD", gray: "#25282A", orange: "#E7805D", sky: "#99ADC5" };
   var REDUCED = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -128,7 +131,7 @@
     var hid = wrap.getAttribute("aria-labelledby");
     wrap.innerHTML =
       '<h2 class="hs-h" id="' + hid + '">Who owned this land?</h2>' +
-      '<p class="hs-sub">Slide through the years and watch federal land patents fill in the townships around Medora and the Elkhorn Ranch area. Tap any parcel for the record.</p>';
+      '<p class="hs-sub">Slide through the years and watch federal land patents fill in the townships around Medora and the Elkhorn Ranch area. Tap anywhere on the map to see the story of that spot, or use <strong>What land am I on?</strong> when you\'re out in the badlands.</p>';
     var box = el("div", { class: "hs-mapbox" });
     var ctr = el("div", { class: "hs-controls" });
     var play = el("button", { type: "button", class: "hs-btn hs-play", "aria-pressed": "false" });
@@ -137,9 +140,12 @@
     var slider = el("div", { class: "hs-slider" });
     slider.innerHTML =
       '<label class="hs-sr" for="' + sid + '">Year</label>' +
-      '<input class="hs-range" id="' + sid + '" type="range" min="' + Y0 + '" max="' + Y1 + '" step="1">' +
-      '<div class="hs-ticks" aria-hidden="true"><span>1880</span><span>1900</span><span>1920</span><span>1940</span><span>1960</span></div>';
-    ctr.appendChild(play); ctr.appendChild(yearOut); ctr.appendChild(slider);
+      '<input class="hs-range" id="' + sid + '" type="range" min="' + S0 + '" max="' + Y1 + '" step="1">' +
+      '<div class="hs-ticks" aria-hidden="true">' + [S0, 1900, 1920, 1940, Y1].map(function (t) {
+        return '<span style="--at:' + ((t - S0) / (Y1 - S0)).toFixed(4) + '">' + t + '</span>';
+      }).join("") + '</div>';
+    var era = el("p", { class: "hs-era", hidden: "" });
+    ctr.appendChild(play); ctr.appendChild(yearOut); ctr.appendChild(slider); ctr.appendChild(era);
     var mapEl = el("div", { class: "hs-map", role: "region", "aria-label": "Map of federal land patents around Medora, North Dakota" });
     var h = parseInt(opts.height, 10);
     if (h > 150) mapEl.style.height = h + "px";
@@ -152,7 +158,8 @@
       '<li><span class="hs-sw hs-sw-part" aria-hidden="true"></span>Only part of the land mapped so far</li>' +
       '<li><span class="hs-sw hs-sw-twp" aria-hidden="true"></span>Township</li>';
     var live = el("p", { class: "hs-sr", "aria-live": "polite" });
-    box.appendChild(ctr); box.appendChild(mapEl); box.appendChild(legend);
+    var spotEl = el("div", { class: "hs-spot", hidden: "", tabindex: "-1", "aria-live": "polite" });
+    box.appendChild(ctr); box.appendChild(mapEl); box.appendChild(spotEl); box.appendChild(legend);
     wrap.appendChild(box); wrap.appendChild(live);
     root.appendChild(wrap);
     var range = slider.querySelector("input");
@@ -212,16 +219,23 @@
         var p = f.properties;
         var t = groups[p.t] ? p.t : "individual";
         var ly = L.geoJSON(f, { pane: paneOf[t], style: function () { return styleOf(p); } });
-        ly.bindPopup(function () { return popupHtml(p); }, { maxWidth: 300, autoPanPadding: [16, 16] });
         ly.on("mouseover", function () { ly.setStyle({ weight: 2.6, color: p.t === "usa" ? C.orange : C.night }); });
         ly.on("mouseout", function () { ly.setStyle(styleOf(p)); });
-        var it = { p: p, layer: ly, group: groups[t], on: false };
+        var it = { p: p, g: f.geometry, layer: ly, group: groups[t], on: false };
         items.push(it); byAcc[p.a] = it;
       });
 
       var current = Y1;
+      var firstYear = items.reduce(function (m, it) { return Math.min(m, it.p.y); }, 9999);
+      function eraText(y) {
+        if (y >= firstYear) return "";
+        var lead = y === S0
+          ? "Theodore Roosevelt first came to Dakota Territory in 1883 to hunt bison."
+          : "In the 1880s Roosevelt ranched in these badlands, at the Maltese Cross and the Elkhorn.";
+        return lead + " No land in these townships has a federal patent yet. The first came in " + firstYear + ".";
+      }
       function setYear(y, announce) {
-        y = Math.max(Y0, Math.min(Y1, y | 0));
+        y = Math.max(S0, Math.min(Y1, y | 0));
         current = y;
         var atEnd = y >= Y1, nInd = 0, nUsa = 0;
         for (var i = 0; i < items.length; i++) {
@@ -231,7 +245,9 @@
           else if (!show && it.on) { it.group.removeLayer(it.layer); it.on = false; }
         }
         range.value = y;
-        range.style.setProperty("--hs-pct", ((y - Y0) / (Y1 - Y0) * 100) + "%");
+        range.style.setProperty("--hs-pct", ((y - S0) / (Y1 - S0) * 100) + "%");
+        var et = eraText(y);
+        if (et) { era.textContent = et; era.hidden = false; } else { era.hidden = true; }
         var label = atEnd && laterCount ? y + "+" : String(y);
         yearOut.textContent = label;
         cInd.textContent = fmt(nInd); cUsa.textContent = fmt(nUsa);
@@ -253,7 +269,7 @@
         play.innerHTML = PLAY_ICON; play.setAttribute("aria-pressed", "false");
       }
       function start() {
-        if (current >= Y1) setYear(Y0, false);
+        if (current >= Y1) setYear(S0, false);
         play.innerHTML = PAUSE_ICON; play.setAttribute("aria-pressed", "true");
         var step = REDUCED ? 5 : 1;
         timer = setInterval(function () {
@@ -264,10 +280,13 @@
       play.addEventListener("click", function () { timer ? stop() : start(); });
 
       var startYear = parseInt(opts.year, 10);
-      setYear(isNaN(startYear) ? Y1 : startYear, false);
+      setYear(isNaN(startYear) ? S0 : startYear, false);
       map.fitBounds(twp.bounds, { padding: [4, 4] });
 
       if (window.ResizeObserver) new ResizeObserver(function () { map.invalidateSize(); }).observe(mapEl);
+
+      var spot = makeSpot(L, map, spotEl, items, twp, wrap);
+      map.on("click", function (e) { spot.show(e.latlng, null); });
 
       var api = {
         focus: function (acc, scroll) {
@@ -277,7 +296,8 @@
           if (it.p.y > current) setYear(it.p.y > Y1 ? Y1 : it.p.y, true);
           if (scroll && wrap.scrollIntoView) wrap.scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "start" });
           map.fitBounds(it.layer.getBounds(), { maxZoom: 14, padding: [40, 40], animate: !REDUCED });
-          setTimeout(function () { it.layer.openPopup(it.layer.getBounds().getCenter()); }, REDUCED ? 50 : 450);
+          var ip = interiorPoint(it.g);
+          setTimeout(function () { spot.show(L.latLng(ip[1], ip[0]), null, acc); }, REDUCED ? 50 : 450);
           return true;
         }
       };
@@ -287,19 +307,232 @@
     }).catch(function (e) { fail(wrap, e); });
   }
 
-  function popupHtml(p) {
-    var kind = p.t === "usa" ? "Patent to the United States" : p.t === "unnamed" ? "Patent, no name in the index" : "Patent to an individual";
-    var h = '<div class="hs-pop"><p class="hs-pop-kind">' + kind + '</p>' +
-      '<p class="hs-pop-name">' + esc(displayName(p)) + '</p><dl>' +
-      '<dt>Patented</dt><dd>' + esc(fmtDate(p.d)) + '</dd>' +
-      '<dt>Land</dt><dd>' + esc(p.l) + '</dd>' +
-      '<dt>Township</dt><dd>' + esc((p.w || []).join(", ")) + '</dd>' +
-      '<dt>Accession</dt><dd>' + esc(p.a) + '</dd></dl>';
-    if (p.p) h += '<p class="hs-pop-note">Only part of this patent\'s land is mapped so far.</p>';
-    if (p.x) h += '<p class="hs-pop-note">This land is a smaller piece of the 40-acre square drawn here.</p>';
-    h += '<a class="hs-pop-link" href="' + esc(gloUrl(p.a)) + '" target="_blank" rel="noopener">See this record at BLM GLO Records</a>' +
-      '<span class="hs-pop-hint">opens BLM\'s search; this record is the first result.</span></div>';
-    return h;
+  // =====================================================================
+  // WHAT LAND AM I ON?  (tap a spot, or use the device's location)
+  // Location is read in the browser and used only for this lookup: nothing is sent or stored.
+  // =====================================================================
+  function ringHas(x, y, r) {
+    var inside = false;
+    for (var i = 0, j = r.length - 1; i < r.length; j = i++) {
+      var xi = r[i][0], yi = r[i][1], xj = r[j][0], yj = r[j][1];
+      if (((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi)) inside = !inside;
+    }
+    return inside;
+  }
+  function polyHas(x, y, rings) {
+    if (!ringHas(x, y, rings[0])) return false;
+    for (var k = 1; k < rings.length; k++) if (ringHas(x, y, rings[k])) return false;
+    return true;
+  }
+  function geomHas(x, y, g) {
+    if (!g) return false;
+    if (g.type === "Polygon") return polyHas(x, y, g.coordinates);
+    if (g.type === "MultiPolygon") { for (var i = 0; i < g.coordinates.length; i++) if (polyHas(x, y, g.coordinates[i])) return true; }
+    if (g.type === "GeometryCollection") { for (var j = 0; j < g.geometries.length; j++) if (geomHas(x, y, g.geometries[j])) return true; }
+    return false;
+  }
+  function eachRing(g, fn) {
+    if (g.type === "Polygon") g.coordinates.forEach(fn);
+    else if (g.type === "MultiPolygon") g.coordinates.forEach(function (p) { p.forEach(fn); });
+  }
+  function geomBox(g) {
+    var b = [180, 90, -180, -90];
+    eachRing(g, function (r) { r.forEach(function (c) { b[0] = Math.min(b[0], c[0]); b[1] = Math.min(b[1], c[1]); b[2] = Math.max(b[2], c[0]); b[3] = Math.max(b[3], c[1]); }); });
+    return b;
+  }
+  function interiorPoint(g) {
+    var b = geomBox(g), cx = (b[0] + b[2]) / 2, cy = (b[1] + b[3]) / 2;
+    if (geomHas(cx, cy, g)) return [cx, cy];
+    for (var n = 3; n <= 15; n += 2) {
+      for (var i = 1; i < n; i++) for (var j = 1; j < n; j++) {
+        var x = b[0] + (b[2] - b[0]) * i / n, y = b[1] + (b[3] - b[1]) * j / n;
+        if (geomHas(x, y, g)) return [x, y];
+      }
+    }
+    var r0 = g.type === "Polygon" ? g.coordinates[0] : g.coordinates[0][0];
+    return r0[0];
+  }
+  // metres from a point to the nearest edge of a ring (flat-earth approximation, fine at this scale)
+  function edgeMeters(x, y, r) {
+    var kx = 111320 * Math.cos(y * Math.PI / 180), ky = 110540, best = Infinity;
+    for (var i = 0; i < r.length - 1; i++) {
+      var ax = (r[i][0] - x) * kx, ay = (r[i][1] - y) * ky, bx = (r[i + 1][0] - x) * kx, by = (r[i + 1][1] - y) * ky;
+      var dx = bx - ax, dy = by - ay, L2 = dx * dx + dy * dy;
+      var t = L2 ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / L2)) : 0;
+      var px = ax + t * dx, py = ay + t * dy;
+      best = Math.min(best, Math.sqrt(px * px + py * py));
+    }
+    return best;
+  }
+  function decodeCell(c) {
+    var x = c[2], y = c[3], ring = [[x / 1e5, y / 1e5]];
+    for (var i = 4; i < c.length; i += 2) { x += c[i]; y += c[i + 1]; ring.push([x / 1e5, y / 1e5]); }
+    return ring;
+  }
+  var ALIQ = { NE: "northeast", NW: "northwest", SE: "southeast", SW: "southwest" };
+  function cellWords(label) {
+    if (label.charAt(0) === "L") return "Lot " + label.slice(1);
+    var m = /^(NE|NW|SE|SW)(NE|NW|SE|SW)$/.exec(label);
+    return m ? "The " + ALIQ[m[1]] + " quarter of the " + ALIQ[m[2]] + " quarter, about 40 acres" : label;
+  }
+  function milesBetween(a, b) {
+    var R = 3958.8, t = Math.PI / 180;
+    var dLat = (b[1] - a[1]) * t, dLng = (b[0] - a[0]) * t;
+    var h = Math.sin(dLat / 2) * Math.sin(dLat / 2) + Math.cos(a[1] * t) * Math.cos(b[1] * t) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+  var PIN = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0a5.5 5.5 0 0 0-5.5 5.5C2.5 9.6 8 16 8 16s5.5-6.4 5.5-10.5A5.5 5.5 0 0 0 8 0zm0 8a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>';
+
+  function makeSpot(L, map, panel, items, twp, wrap) {
+    var marker = null, ring = null, seq = 0;
+
+    // locate control (top right of the map)
+    var Ctl = L.Control.extend({
+      options: { position: "topright" },
+      onAdd: function () {
+        var d = L.DomUtil.create("div", "hs-locate");
+        d.innerHTML = '<button type="button" class="hs-btn hs-locate-btn">' + PIN + '<span>What land am I on?</span></button>';
+        L.DomEvent.disableClickPropagation(d);
+        d.querySelector("button").addEventListener("click", locate);
+        return d;
+      }
+    });
+    map.addControl(new Ctl());
+
+    function setPin(ll, acc) {
+      if (marker) map.removeLayer(marker);
+      if (ring) { map.removeLayer(ring); ring = null; }
+      marker = L.circleMarker(ll, { pane: "hs-top", radius: 8, color: C.night, weight: 4, fillColor: "#fff", fillOpacity: 1, interactive: false }).addTo(map);
+      if (acc && acc > 15) ring = L.circle(ll, { pane: "hs-top", radius: acc, color: C.night, weight: 1, fillColor: C.sky, fillOpacity: 0.15, interactive: false }).addTo(map);
+    }
+
+    function locate() {
+      if (!navigator.geolocation) { message("This browser can't share its location. Tap a spot on the map instead."); return; }
+      message('<p class="hs-spot-wait">Finding your location&hellip;</p><p class="hs-small">' + "Your location stays on your device. It isn't sent anywhere or saved." + '</p>');
+      navigator.geolocation.getCurrentPosition(function (pos) {
+        var ll = L.latLng(pos.coords.latitude, pos.coords.longitude);
+        show(ll, pos.coords.accuracy, null, true);
+      }, function (err) {
+        var why = err && err.code === 1 ? "Location access was turned off for this page." :
+          err && err.code === 3 ? "Finding your location took too long." : "Your location isn't available right now.";
+        message("<p>" + why + " You can still tap any spot on the map to see its story.</p>");
+      }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 });
+    }
+
+    function message(html) {
+      panel.innerHTML = '<div class="hs-spot-in">' + html + '</div>';
+      panel.hidden = false;
+    }
+
+    function show(ll, accuracy, focusAcc, fromGps) {
+      var my = ++seq, x = ll.lng, y = ll.lat;
+      setPin(ll, accuracy);
+      var t = null;
+      twp.townships.forEach(function (tw) { if (!t && geomHas(x, y, tw.geom)) t = tw; });
+      if (!t) { outside(ll, fromGps); return; }
+      if (fromGps) map.setView(ll, Math.max(map.getZoom(), 14), { animate: !REDUCED });
+      message('<p class="hs-spot-wait">Looking up this spot&hellip;</p>');
+      Promise.all([getJSON("grid.json"), getJSON("landnow.json"), getJSON("context.json")]).then(function (r) {
+        if (my !== seq) return;
+        render(ll, accuracy, t, r[0], r[1], r[2], focusAcc, fromGps);
+      }).catch(function () { message("<p>This spot's details couldn't load. Please try again.</p>"); });
+    }
+
+    function outside(ll, fromGps) {
+      var best = Infinity;
+      twp.townships.forEach(function (tw) { eachRing(tw.geom, function (r) { r.forEach(function (c) { best = Math.min(best, milesBetween([ll.lng, ll.lat], c)); }); }); });
+      var where = fromGps ? "You're" : "This spot is";
+      message('<p class="hs-spot-kicker">Outside the mapped area</p>' +
+        '<p>' + where + ' about <strong>' + fmt(Math.max(1, Math.round(best))) + ' miles</strong> from the 12 townships this map covers, around Medora and the Elkhorn Ranch area.</p>' +
+        '<p><button type="button" class="hs-btn hs-btn-ghost hs-spot-back">Show the mapped area</button></p>');
+      panel.querySelector(".hs-spot-back").addEventListener("click", function () { map.fitBounds(twp.bounds, { padding: [4, 4] }); });
+      if (fromGps) map.fitBounds(L.latLngBounds(twp.bounds).extend(ll), { padding: [24, 24] });
+    }
+
+    function render(ll, accuracy, t, grid, landnow, ctx, focusAcc, fromGps) {
+      var x = ll.lng, y = ll.lat, cell = null, cellRing = null;
+      (grid[t.name] || []).some(function (c) {
+        var r = decodeCell(c);
+        if (ringHas(x, y, r)) { cell = c; cellRing = r; return true; }
+        return false;
+      });
+      var here = items.filter(function (it) { return geomHas(x, y, it.g); })
+        .sort(function (a, b) { return a.p.d < b.p.d ? -1 : a.p.d > b.p.d ? 1 : 0; });
+      var agency = "none";
+      landnow.features.some(function (f) { if (geomHas(x, y, f.geometry)) { agency = f.properties.a; return true; } return false; });
+      var today = ctx.today[agency] || ctx.today.none;
+      var sec = cell ? cell[0] : null;
+
+      var h = [];
+      h.push('<button type="button" class="hs-spot-close" aria-label="Close">&times;</button>');
+      h.push('<p class="hs-spot-kicker">' + (fromGps ? "You are here" : "This spot") + '</p>');
+      h.push('<h3 class="hs-spot-title">' + esc(t.name) + (sec ? ", Section " + sec : "") + '</h3>');
+      if (cell) h.push('<p class="hs-spot-where">' + esc(cellWords(cell[1])) + '</p>');
+      var edge = cellRing ? edgeMeters(x, y, cellRing) : Infinity;
+      var slack = Math.max(25, accuracy || 0);
+      if (fromGps && edge < slack) h.push('<p class="hs-spot-note">' + (fromGps ? "You're" : "This spot is") + ' near the edge of this 40-acre square, so the land next door may be the one that applies.</p>');
+
+      // federal patents
+      h.push('<h4 class="hs-spot-h">Federal land patents here</h4>');
+      if (here.length) {
+        h.push('<ol class="hs-spot-list">');
+        here.forEach(function (it, i) {
+          var p = it.p;
+          var kind = p.t === "usa" ? "Patented to the United States" : p.t === "unnamed" ? "Patent, no name in the index" : "Patented to";
+          var who = p.t === "individual" ? '<strong>' + esc(displayName(p)) + '</strong>' : "";
+          var extra = "";
+          if (p.t === "usa") {
+            var prev = here.slice(0, i).filter(function (o) { return o.p.t === "individual"; }).pop();
+            if (prev) { var gap = p.y - prev.p.y; extra = '<span class="hs-spot-tag">' + gap + " year" + (gap === 1 ? "" : "s") + " after " + esc(displayName(prev.p)) + "'s patent</span>"; }
+          }
+          if (p.m) extra += '<span class="hs-spot-tag">The record reserves coal and other minerals to the United States</span>';
+          var same = items.filter(function (o) { return o !== it && o.p.d === p.d && o.p.t === "individual" && p.t === "individual" && (o.p.w || []).join() === (p.w || []).join(); });
+          if (same.length) extra += '<span class="hs-spot-tag">Same day in this township: ' + same.slice(0, 3).map(function (o) { return esc(displayName(o.p)); }).join(", ") + (same.length > 3 ? " and " + (same.length - 3) + " more" : "") + '</span>';
+          h.push('<li' + (focusAcc === p.a ? ' class="hs-spot-focus"' : "") + '><span class="hs-spot-year">' + p.y + '</span><div>' +
+            '<p>' + kind + (who ? " " + who : "") + ', ' + esc(fmtDate(p.d)) + '</p>' + extra +
+            '<p class="hs-small">Land: ' + esc(p.l) + (p.x ? " (part of this 40-acre square)" : "") + '</p>' +
+            '<a class="hs-small" href="' + esc(gloUrl(p.a)) + '" target="_blank" rel="noopener">See the record at BLM GLO Records</a></div></li>');
+        });
+        h.push('</ol>');
+      } else {
+        var why = "No federal patent for this spot is in this map's records. It may never have been patented, or it may have left federal hands through a grant.";
+        if (sec === 16 || sec === 36) why = ctx.sections.school;
+        else if (sec && sec % 2 === 1) why = ctx.sections.odd + " " + why;
+        h.push('<p>' + esc(why) + '</p>');
+      }
+
+      // today
+      h.push('<h4 class="hs-spot-h">Who manages it today</h4>');
+      h.push('<p><strong>' + esc(today.name) + '.</strong> ' + esc(today.who) + '</p>');
+      var lastP = here.length ? here[here.length - 1].p : null;
+      if (lastP && lastP.t === "individual" && (agency === "NPS" || agency === "USFS" || agency === "BLM"))
+        h.push('<p class="hs-small">No later federal patent here shows the land going back to the United States, so it likely returned another way, such as a purchase. The records on this map don\'t say.</p>');
+      h.push('<p class="hs-small">' + esc(ctx.today.note) + ' <a href="' + esc(ctx.today.source.url) + '" target="_blank" rel="noopener">' + esc(ctx.today.source.label) + '</a></p>');
+
+      // before
+      var nat = ctx.native;
+      h.push('<h4 class="hs-spot-h">' + esc(nat.title) + '</h4>');
+      h.push('<p>' + esc(nat.short) + '</p>');
+      h.push('<details class="hs-spot-more"><summary>Read more about Native land and treaties here</summary>');
+      nat.paras.forEach(function (t) { h.push('<p>' + esc(t) + '</p>'); });
+      h.push('<p class="hs-small">Sources:</p><ul class="hs-spot-src">');
+      nat.sources.forEach(function (s) { h.push('<li><a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.label) + '</a></li>'); });
+      h.push('</ul></details>');
+
+      if (fromGps) h.push('<p class="hs-small hs-spot-privacy">' + esc(ctx.privacy) + '</p>');
+      panel.innerHTML = '<div class="hs-spot-in">' + h.join("") + '</div>';
+      panel.hidden = false;
+      panel.querySelector(".hs-spot-close").addEventListener("click", close);
+      if (window.innerWidth < 640 && panel.scrollIntoView) panel.scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "nearest" });
+    }
+
+    function close() {
+      panel.hidden = true; panel.innerHTML = "";
+      if (marker) { map.removeLayer(marker); marker = null; }
+      if (ring) { map.removeLayer(ring); ring = null; }
+    }
+
+    return { show: function (ll, acc, focusAcc) { show(ll, acc, focusAcc, false); }, locate: locate };
   }
 
   // =====================================================================

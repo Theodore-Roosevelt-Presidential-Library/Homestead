@@ -80,7 +80,12 @@
 .hs .hs-range:focus-visible { outline: none; }
 .hs .hs-range:focus-visible::-webkit-slider-thumb { outline: 3px solid var(--hs-night); outline-offset: 2px; }
 .hs .hs-range:focus-visible::-moz-range-thumb { outline: 3px solid var(--hs-night); outline-offset: 2px; }
-.hs .hs-ticks { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--hs-gray-soft); padding: 0 4px; margin-top: -6px; font-variant-numeric: tabular-nums; }
+.hs .hs-ticks { position: relative; height: 1.1rem; font-size: 0.75rem; color: var(--hs-gray-soft); margin-top: -6px; font-variant-numeric: tabular-nums; }
+.hs .hs-ticks span { position: absolute; top: 0; left: calc(14px + (100% - 28px) * var(--at)); transform: translateX(-50%); white-space: nowrap; }
+.hs .hs-ticks span:first-child { transform: translateX(-14px); }
+.hs .hs-ticks span:last-child { transform: translateX(calc(-100% + 14px)); }
+.hs .hs-era { grid-column: 1 / -1; margin: 0; font-size: 0.9375rem; line-height: 1.45; color: var(--hs-night); border-left: 3px solid var(--hs-orange); padding: 2px 0 2px 10px; }
+.hs .hs-era[hidden] { display: none; }
 
 .hs .hs-map { width: 100%; height: 640px; background: #EDEBE4; position: relative; z-index: 0; }
 .hs .hs-map.leaflet-container { font: inherit; font-size: 0.875rem; }
@@ -202,3 +207,39 @@
 .hs .leaflet-container img { border: 0 !important; box-shadow: none !important; margin: 0 !important; padding: 0 !important; background: none; }
 .hs .leaflet-container a { color: var(--hs-forest); }
 .hs .leaflet-bar a { color: var(--hs-gray); }
+
+/* ---------- what land am I on? ---------- */
+.hs .hs-locate { margin: 10px 10px 0 0; }
+.hs .hs-locate-btn { min-height: 40px; padding: 6px 14px; font-size: 0.875rem; box-shadow: 0 1px 4px rgba(0,0,0,.25); }
+.hs .hs-locate-btn svg { width: 15px; height: 15px; }
+.hs .hs-spot { border-top: 1px solid var(--hs-line); background: #fff; }
+.hs .hs-spot:focus { outline: none; }
+.hs .hs-spot-in { position: relative; padding: 18px 24px 20px; max-width: 46rem; }
+.hs .hs-spot-close {
+  position: absolute; top: 8px; right: 8px; width: 44px; height: 44px; border: 0; background: transparent;
+  font-size: 1.75rem; line-height: 1; color: var(--hs-gray-soft); cursor: pointer; border-radius: 999px;
+}
+.hs .hs-spot-close:hover { background: var(--hs-sand-light); color: var(--hs-night); }
+.hs .hs-spot-kicker { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--hs-orange); margin: 0 0 2px; }
+.hs .hs-spot-title { font-size: 1.25rem; font-weight: 700; color: var(--hs-night); margin: 0; line-height: 1.25; padding-right: 40px; }
+.hs .hs-spot-where { color: var(--hs-gray-soft); margin: 2px 0 0; }
+.hs .hs-spot-note { background: var(--hs-sand-light); border-left: 3px solid var(--hs-sand); padding: 6px 10px; margin: 10px 0 0; font-size: 0.875rem; }
+.hs .hs-spot-h { font-size: 0.9375rem; font-weight: 700; color: var(--hs-forest); margin: 18px 0 6px; }
+.hs .hs-spot-list > li { display: grid; grid-template-columns: 3.25rem 1fr; gap: 10px; padding: 8px 0; border-top: 1px solid var(--hs-line); }
+.hs .hs-spot-list > li:first-child { border-top: 0; padding-top: 2px; }
+.hs .hs-spot-list > li.hs-spot-focus { background: var(--hs-sand-light); margin: 0 -8px; padding-left: 8px; padding-right: 8px; border-radius: 6px; }
+.hs .hs-spot-year { font-weight: 700; color: var(--hs-night); font-variant-numeric: tabular-nums; }
+.hs .hs-spot-list p { margin: 0; }
+.hs .hs-spot-tag { display: inline-block; font-size: 0.8125rem; background: var(--hs-sand-light); border-radius: 4px; padding: 1px 8px; margin: 4px 6px 2px 0; }
+.hs .hs-spot-in > p + p { margin-top: 6px; }
+.hs .hs-spot-more { margin-top: 8px; }
+.hs .hs-spot-more summary { cursor: pointer; color: var(--hs-forest); font-weight: 600; min-height: 32px; display: flex; align-items: center; }
+.hs .hs-spot-more p { margin: 8px 0 0; }
+.hs .hs-spot-src { list-style: disc; padding-left: 1.25rem; font-size: 0.8125rem; }
+.hs .hs-spot-src li { margin: 2px 0; }
+.hs .hs-spot-privacy { margin-top: 14px !important; }
+.hs .hs-spot-wait { color: var(--hs-gray-soft); }
+@media (max-width: 640px) {
+  .hs .hs-spot-in { padding: 16px 16px 18px; }
+  .hs .hs-locate-btn span { font-size: 0.8125rem; }
+}

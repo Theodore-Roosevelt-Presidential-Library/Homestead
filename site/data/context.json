@@ -1,0 +1,64 @@
+{
+  "_note": "Hand-written text for the 'What land am I on?' card. Every statement is drawn from the sources listed here; edit with care and keep the sources in step.",
+  "today": {
+    "NPS": {
+      "name": "Theodore Roosevelt National Park",
+      "who": "Managed by the National Park Service."
+    },
+    "USFS": {
+      "name": "Little Missouri National Grassland",
+      "who": "Managed by the U.S. Forest Service as part of the Dakota Prairie Grasslands."
+    },
+    "BLM": {
+      "name": "Public land",
+      "who": "Managed by the Bureau of Land Management."
+    },
+    "ST": {
+      "name": "State of North Dakota land",
+      "who": "Owned by the State of North Dakota."
+    },
+    "none": {
+      "name": "Private land, a town, or other ownership",
+      "who": "Not in the federal or state land layer. Owners aren't named here. Please respect private property."
+    },
+    "note": "Land status today comes from the Bureau of Land Management's Surface Management Agency data. It shows who manages the surface, not legal boundaries, and rules for visiting differ by agency.",
+    "source": {
+      "label": "BLM Surface Management Agency data",
+      "url": "https://gis.blm.gov/arcgis/rest/services/lands/BLM_Natl_SMA_Cached_without_PriUnk/MapServer"
+    }
+  },
+  "sections": {
+    "school": "Sections 16 and 36 in each township were granted to North Dakota for its schools, so they usually have no federal patent to a homesteader.",
+    "odd": "Under its 1864 federal land grant, the Northern Pacific Railroad received odd-numbered sections along its line. Land that passed through the railroad was sold privately and doesn't appear here as a federal patent to an individual."
+  },
+  "native": {
+    "title": "Before the homesteads",
+    "short": "Part of the homeland the United States recognized for the Mandan, Hidatsa and Arikara in 1851. Taken out of the Fort Berthold Reservation by executive order in 1880.",
+    "paras": [
+      "People have hunted and gathered in these badlands for thousands of years. Archaeologists in Theodore Roosevelt National Park have found artifacts from the Archaic period (5,500 BCE to 500 CE) on. The steep terrain and slick clay made living here year-round impractical, so people mostly came to hunt, gather, and for spiritual practice.",
+      "In historic times, the Mandan and Hidatsa counted the Little Missouri River basin among their bison hunting grounds, and eagle trapping here was important to both peoples. The Crow used the badlands at the eastern edge of their territory, the Arikara and several Lakota bands moved into western North Dakota, and in the early 1800s many other nations came to the region to hunt and trade. Buttes served as landmarks for travelers, and steep bluffs as places for vision quests.",
+      "In the 1851 Treaty of Fort Laramie, the United States recognized a territory for the Mandan, Hidatsa and Arikara that ran from the Heart River west to the Yellowstone and south toward the headwaters of the Little Missouri. Every spot on this map lies inside it. Treaty records call the Hidatsa \"Gros Ventre.\" The treaty also said the nations did not give up the privilege of hunting, fishing or traveling across any of the lands the treaty described.",
+      "An executive order of April 12, 1870, set aside the Fort Berthold Reservation, and the reservation as first drawn included this land. An executive order of July 13, 1880, took this area out of the reservation and returned it to the public domain. Between 1851 and 1880 the three nations lost more than 12 million acres. Today they are the Mandan, Hidatsa and Arikara Nation, also called the Three Affiliated Tribes."
+    ],
+    "cession": "Royce land cession area 620",
+    "sources": [
+      {
+        "label": "National Park Service: Theodore Roosevelt National Park, Cultural History",
+        "url": "https://www.nps.gov/thro/learn/historyculture/cultural-history.htm"
+      },
+      {
+        "label": "Treaty of Fort Laramie, September 17, 1851, Article 5 (Kappler)",
+        "url": "https://indianlaw.mt.gov/_docs/fortpeck/treaties/laramie-treaty-1851.pdf"
+      },
+      {
+        "label": "North Dakota Studies: Creating Fort Berthold Reservation",
+        "url": "https://www.ndstudies.gov/gr8/node/173"
+      },
+      {
+        "label": "Royce, Indian Land Cessions in the United States (1899), area 620, via Treaties Explorer",
+        "url": "https://digitreaties.org/treaties/cession/620/"
+      }
+    ]
+  },
+  "privacy": "Your location stays on your device. It isn't sent anywhere or saved."
+}

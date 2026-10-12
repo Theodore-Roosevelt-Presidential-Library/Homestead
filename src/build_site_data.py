@@ -60,6 +60,12 @@ def main():
     reacq = list(csv.DictReader(open(os.path.join(PROC, "reacquisitions.csv"))))
     print(f"read {len(parcels)} parcels, {len(unique)} patents, {len(reacq)} reacquisitions")
 
+    # patents whose record text reserves coal or other minerals to the United States
+    mineral = set()
+    for r in csv.DictReader(open(os.path.join(PROC, "patents_all.csv"))):
+        if re.search(r"COAL|MINERAL", r["land_desc_shown"], re.I):
+            mineral.add(r["accession"])
+
     # ---------- parcels ----------
     feats, by_acc, shapes = [], {}, {}
     for f in parcels:
@@ -75,6 +81,7 @@ def main():
                 "l": p["land"], "w": p.get("twp") or [],
                 "p": 0 if p.get("complete", True) else 1,      # 1 = only part mapped
                 "x": 1 if p.get("approx") else 0,              # 1 = drawn on containing 40-acre square
+                "m": 1 if p["acc"] in mineral else 0,          # 1 = record reserves coal/minerals to the US
             },
         })
     # draw order: unnamed, individual, usa (United States on top)
@@ -101,6 +108,36 @@ def main():
         u = u.simplify(0.00005)
         c = u.representative_point() if not u.centroid.within(u) else u.centroid
         twps.append({"name": name, "label": [round(c.y, 5), round(c.x, 5)], "geom": geom_out(u), "_g": u})
+    # ---------- survey grid for "what land am I on?" (loaded only when someone asks) ----------
+    # Each cell: [section, label, x0, y0, dx1, dy1, ...] with coordinates as 1e-5 degree integers.
+    grid = {}
+    for path in sorted(glob.glob(os.path.join(GRID, "ND05*.geojson"))):
+        m = re.search(r"ND05(\d{3})0N(\d{3})0W0", path)
+        name = f"T{int(m.group(1))}N R{int(m.group(2))}W"
+        cells = []
+        for f in json.load(open(path))["features"]:
+            mm = re.match(r"SN(\d{2})\d([AL])(.+)", f["properties"]["SECDIVID"][15:])
+            if not mm:
+                continue
+            g = shape(f["geometry"]).simplify(0.00001)
+            if g.geom_type == "MultiPolygon":
+                g = max(g.geoms, key=lambda x: x.area)
+            pts = [(round(x * 1e5), round(y * 1e5)) for x, y in g.exterior.coords]
+            flat = [pts[0][0], pts[0][1]]
+            for (ax, ay), (bx, by) in zip(pts, pts[1:]):
+                flat += [bx - ax, by - ay]
+            label = mm.group(3) if mm.group(2) == "A" else "L" + mm.group(3)
+            cells.append([int(mm.group(1)), label] + flat)
+        grid[name] = cells
+    dump("grid.json", grid)
+
+    # ---------- land status today (BLM Surface Management Agency, clipped; see src/fetch_land_status.py) ----------
+    sma = os.path.join(ROOT, "data", "raw", "land_status_sma.geojson")
+    if os.path.exists(sma):
+        lf = [{"type": "Feature", "properties": {"a": f["properties"]["agency"]}, "geometry": geom_out(shape(f["geometry"]))}
+              for f in json.load(open(sma))["features"]]
+        dump("landnow.json", {"type": "FeatureCollection", "features": lf})
+
     t143 = unary_union([t["_g"] for t in twps if t["name"].startswith("T143N")])
     elk = t143.centroid
     bounds = unary_union([t["_g"] for t in twps]).bounds
