@@ -30,6 +30,7 @@
   .eyebrow a { color: inherit; text-decoration: none; }
   h1 { margin: 0 0 14px; font-size: clamp(1.9rem, 4.6vw, 3rem); line-height: 1.08; letter-spacing: -.02em; max-width: 22ch; }
   h1 span { display: block; font-size: .55em; font-weight: 600; letter-spacing: -.01em; color: #D1CCBD; margin-top: 8px; }
+  .lede + .lede { margin-top: 14px; }
   .lede { margin: 0; max-width: 44rem; font-size: 1.125rem; color: #F3F1EA; }
   .jump { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 22px 0 0; padding: 0; list-style: none; font-size: .9375rem; }
   .jump a { color: #fff; }
@@ -55,7 +56,9 @@
     <p class="eyebrow"><a href="https://www.trlibrary.com/">Theodore Roosevelt Presidential Library</a> · Labs</p>
     <h1>Who Owned the Badlands? <span>Homesteads around Medora, 1889–1957</span></h1>
     <p class="lede">When the federal government handed public land to a new owner, it left a paper trail. Follow it through <span data-hs-stat="mapped">773</span> federal land patents in 12 townships around Medora and the Elkhorn Ranch area, from the first homestead claims to the land patented to the United States in the 1930s.</p>
+    <p class="lede lede-native">The paper trail starts late. People have hunted, gathered and sought visions in these badlands for thousands of years. In the 1851 Treaty of Fort Laramie, the United States recognized this ground as part of the territory of the Mandan, Hidatsa and Arikara, today the MHA Nation. An executive order in 1880 took it out of the Fort Berthold Reservation and returned it to the public domain, where the homestead claims on this map were later made.</p>
     <ul class="jump">
+      <li><a href="#before">Before the homesteads</a></li>
       <li><a href="#hs-map">Map</a></li>
       <li><a href="#chart">By year</a></li>
       <li><a href="#search">Search names</a></li>
@@ -72,6 +75,22 @@
     <div id="chart" class="page-section" data-homestead="chart"></div>
     <div id="search" class="page-section" data-homestead="search"></div>
     <div id="stories" class="page-section" data-homestead="stories"></div>
+
+    <section id="before" class="page-section" aria-labelledby="before-h">
+      <!-- Keep in step with "native" in data/context.json (the map card uses the same text and sources). -->
+      <h2 id="before-h">Before the homesteads</h2>
+      <p>People have hunted and gathered in these badlands for thousands of years. Archaeologists in Theodore Roosevelt National Park have found artifacts from the Archaic period (5,500 BCE to 500 CE) on. The steep terrain and slick clay made living here year-round impractical, so people mostly came to hunt, gather, and for spiritual practice.</p>
+      <p>In historic times, the Mandan and Hidatsa counted the Little Missouri River basin among their bison hunting grounds, and eagle trapping here was important to both peoples. The Crow used the badlands at the eastern edge of their territory, the Arikara and several Lakota bands moved into western North Dakota, and in the early 1800s many other nations came to the region to hunt and trade. Buttes served as landmarks for travelers, and steep bluffs as places for vision quests.</p>
+      <p>In the 1851 Treaty of Fort Laramie, the United States recognized a territory for the Mandan, Hidatsa and Arikara that ran from the Heart River west to the Yellowstone and south toward the headwaters of the Little Missouri. All 12 townships on this map lie inside it. Treaty records call the Hidatsa "Gros Ventre." The treaty also said the nations did not give up the privilege of hunting, fishing or traveling across any of the lands it described.</p>
+      <p>An executive order of April 12, 1870, set aside the Fort Berthold Reservation, and the reservation as first drawn included this land. An executive order of July 13, 1880, took this area out of the reservation and returned it to the public domain. Between 1851 and 1880 the three nations lost more than 12 million acres. Today they are the Mandan, Hidatsa and Arikara Nation, also called the Three Affiliated Tribes.</p>
+      <h3>Sources</h3>
+      <ul>
+        <li><a href="https://www.nps.gov/thro/learn/historyculture/cultural-history.htm">National Park Service: Theodore Roosevelt National Park, Cultural History</a></li>
+        <li><a href="https://indianlaw.mt.gov/_docs/fortpeck/treaties/laramie-treaty-1851.pdf">Treaty of Fort Laramie, September 17, 1851, Article 5 (Kappler)</a></li>
+        <li><a href="https://www.ndstudies.gov/gr8/node/173">North Dakota Studies: Creating Fort Berthold Reservation</a></li>
+        <li><a href="https://digitreaties.org/treaties/cession/620/">Royce, <em>Indian Land Cessions in the United States</em> (1899), area 620, via Treaties Explorer</a></li>
+      </ul>
+    </section>
 
     <section id="about" class="page-section" aria-labelledby="about-h">
       <h2 id="about-h">About the data</h2>
